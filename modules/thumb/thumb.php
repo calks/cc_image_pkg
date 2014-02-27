@@ -1,5 +1,5 @@
 <?php
-
+error_reporting(E_ALL); ini_set('display_errors',1);
 	class imagePkgThumbModule extends coreBaseModule {
 		
 		protected $image_id;
@@ -41,7 +41,7 @@
 		
 		
 		protected function redirectToImage() {
-			$redirect_url = imagePkgHelperLibrary::getThumbnailUrl($this->image_id, $this->width, $this->height, $this->mode, $this->output_format);
+			$redirect_url = imagePkgHelperLibrary::getThumbnailUrl($this->image_id, $this->width, $this->height, $this->mode, $this->output_format);			
 			Redirector::redirect($redirect_url);
 		}
 		
@@ -52,9 +52,13 @@
 						
 			if ((int)$this->image_id == 0) {
 				$this->image_id = str_replace(array('/', '\\'), '', $this->image_id);
-				$this->source_path = Application::getFilePathForResource($this->getName(), $this->getModuleType(), "/static/no_image/{$this->image_id}.png");
+				
+				/*$t = coreResourceLibrary::getFirstFilePath(APP_RESOURCE_TYPE_MODULE, $this->getName(), '/static/no_image');
+				print_r($t);*/
+				
+				$this->source_path = Application::getSitePath() . coreResourceLibrary::getFirstFilePath(APP_RESOURCE_TYPE_MODULE, $this->getName(), "/static/no_image/{$this->image_id}.png");
 				if (!is_file($this->source_path)) {
-					$this->source_path = Application::getFilePathForResource($this->getName(), $this->getModuleType(), "/static/no_image/default.png");
+					$this->source_path = Application::getSitePath() . coreResourceLibrary::getFirstFilePath(APP_RESOURCE_TYPE_MODULE, $this->getName(), "/static/no_image/default.png");
 				}				
 			}
 			else {				
@@ -66,6 +70,7 @@
 				
 				$this->source_path = Application::getSitePath() . imagePkgHelperLibrary::getStorageDirectory($this->image->stored_filename) . '/' . $this->image->stored_filename;
 			}
+			//echo $this->source_path;
 
 			if (!is_file($this->source_path)) return $this->terminate();
 			
