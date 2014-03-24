@@ -13,6 +13,7 @@
 			if (!isset($_SESSION[$session_name])) $_SESSION[$session_name] = array();
 			
 			$_SESSION[$session_name][$field_hash] = array(
+				'field_name' => $aName,
 				'entity_name' => $entity_name,
 				'entity_id' => $entity_id,
 				'params' => $params
