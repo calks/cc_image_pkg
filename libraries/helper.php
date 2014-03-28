@@ -73,8 +73,8 @@
 			return parent::deleteFiles($entity, $storage_entity_name);
 		}
 		
-		public static function copyExistingFile($entity, $file_path) {
-			$file_id = filePkgHelperLibrary::copyExistingFile($entity, $file_path);
+		public static function copyExistingFile($entity, $file_path, $field_name) {
+			$file_id = filePkgHelperLibrary::copyExistingFile($entity, $file_path, $field_name);
 			if (!$file_id) return;
 			
 			$file = Application::getEntityInstance('file');
