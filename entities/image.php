@@ -6,7 +6,7 @@
 		public $width;
 		public $height;
 		
-		public function getTableName() {
+		public function getTableName() {			
 			return 'images';
 		}
 		
