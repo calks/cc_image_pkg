@@ -91,6 +91,7 @@
 			$image->seq = $file->seq;
 			$image->field_hash = $file->field_hash;
 			$image->is_temporary = $file->is_temporary;
+			$image->field_name = $file->field_name;
 			
 			$file_path = Application::getSiteUrl() . filePkgHelperLibrary::getStorageDirectory($file->stored_filename) . '/' . $file->stored_filename;
 			$dimensions = @getimagesize($file_path);
