@@ -139,9 +139,7 @@ error_reporting(E_ALL); ini_set('display_errors',1);
 		        
 	        }
 
-	        $ne = imagecreatetruecolor($out_width, $out_height);
-	        $white = imagecolorallocate($ne , 255, 255, 255);
-	        imagefill($ne, 0, 0, $white);
+	        $ne = $this->getEmptyImage($out_width, $out_height);
 
         	imagecopyresampled($ne, $img, $destLeft, $destTop, $srcLeft, $srcTop, $dest_width, $dest_height, $info[0], $info[1]);
 
@@ -166,6 +164,15 @@ error_reporting(E_ALL); ini_set('display_errors',1);
 
         	if (is_file($destination_path)) $this->redirectToImage();
         	else return $this->terminate();        	
+		}
+		
+		protected function getEmptyImage($width, $height, $fill_r=255, $fill_g=255, $fill_b=255) {
+	        $ne = imagecreatetruecolor($width, $height);
+	        if (!is_null($fill_r) && !is_null($fill_g) && !is_null($fill_b)) {
+		        $fill = imagecolorallocate($ne, $fill_r, $fill_g, $fill_b);
+		        imagefill($ne, 0, 0, $fill);	        	
+	        }
+	        return $ne;
 		}
 		
 		
