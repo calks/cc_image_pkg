@@ -50,13 +50,21 @@
 			
 		}
 		
-		public static function getThumbnailRelativePath($image_id, $width, $height, $mode='inscribe', $output_format='jpeg') {					
+		public static function getThumbnailRelativePath($image_id, $width, $height, $mode='inscribe', $output_format='jpeg', $generate_if_not_available=false) {					
 			$path = self::getThumbnailDir($image_id) . "/{$width}x{$height}_$mode.$output_format";
+			if ($generate_if_not_available) {
+				$file_available = is_file(Application::getSiteUrl() . $path); 
+				if (!$file_available) {
+					$temp_path = Application::getSitePath() . Application::getTempDirectory() . '/'.md5(uniqid());					
+					copy(Application::getSiteUrl() . $path, $temp_path);
+					unlink($temp_path);
+				}
+			}			
 			return $path;
 		}
 		
-		public static function getThumbnailUrl($image_id, $width, $height, $mode='inscribe', $output_format='jpeg') {
-			return Application::getSiteUrl() . self::getThumbnailRelativePath($image_id, $width, $height, $mode, $output_format); 
+		public static function getThumbnailUrl($image_id, $width, $height, $mode='inscribe', $output_format='jpeg', $generate_if_not_available=false) {
+			return Application::getSiteUrl() . self::getThumbnailRelativePath($image_id, $width, $height, $mode, $output_format, $generate_if_not_available); 
 		}
 		
 		
