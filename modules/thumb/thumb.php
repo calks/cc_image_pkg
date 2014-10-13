@@ -1,5 +1,5 @@
 <?php
-error_reporting(E_ALL); ini_set('display_errors',1);
+	error_reporting(E_ALL); ini_set('display_errors',1);
 	class imagePkgThumbModule extends coreBaseModule {
 		
 		protected $image_id;
@@ -83,12 +83,14 @@ error_reporting(E_ALL); ini_set('display_errors',1);
 			$info = getimagesize($this->source_path);
 			if ($info[2] == IMAGETYPE_JPEG) {
 				if (function_exists('imagecreatefromjpeg')) $img = imagecreatefromjpeg($this->source_path);
-				else return false;
+				else return $this->terminate();
 			} elseif ($info[2] == IMAGETYPE_GIF) {
-				$img = imagecreatefromgif($this->source_path);	
+				if (function_exists('imagecreatefromgif')) $img = imagecreatefromgif($this->source_path);
+				else return $this->terminate();	
 			}
         	elseif ($info[2] == IMAGETYPE_PNG) {
-        		$img = imagecreatefrompng($this->source_path);
+        		if (function_exists('imagecreatefrompng')) $img = imagecreatefrompng($this->source_path);
+        		else return $this->terminate();
         	}
         	else return $this->terminate();
         	
@@ -160,10 +162,53 @@ error_reporting(E_ALL); ini_set('display_errors',1);
             	break;
         	}
 
+        	$this->addWatermark($ne);
+        	
         	call_user_func($func, $ne, $destination_path);
+        	
+        	/*header("Content-type: $type\n");
+        	imagejpeg($ne);
+        	die();*/
 
         	if (is_file($destination_path)) $this->redirectToImage();
         	else return $this->terminate();        	
+		}
+		
+		
+		protected function addWatermark($image) {
+			$watermark_file = coreResourceLibrary::getFirstFilePath(APP_RESOURCE_TYPE_MODULE, $this->getName(), "/static/watermark");
+			if (!$watermark_file) return;
+			
+			$watermark_path = Application::getSitePath() . $watermark_file;
+			
+			$info = getimagesize($watermark_path);
+			if ($info[2] == IMAGETYPE_JPEG) {
+				if (function_exists('imagecreatefromjpeg')) $watermark = imagecreatefromjpeg($watermark_path);
+				else return;
+			} elseif ($info[2] == IMAGETYPE_GIF) {
+				if (function_exists('imagecreatefromgif')) $watermark = imagecreatefromgif($watermark_path);
+				else return;	
+			}
+        	elseif ($info[2] == IMAGETYPE_PNG) {
+        		if (function_exists('imagecreatefrompng')) $watermark = imagecreatefrompng($watermark_path);
+        		else return;
+        	}
+        	else return;
+        	
+        	$watermark_padding = 8;
+        	
+	        $watermark_width = imagesx($watermark);
+	        $watermark_height = imagesy($watermark);
+	        
+	        $image_width = imagesx($image);
+	        $image_height = imagesy($image);
+	        
+        	if ($image_width < $watermark_width*2) return; 
+			
+        	$watermark_left = $image_width - $watermark_width - $watermark_padding;
+        	$watermark_top = $image_height - $watermark_height - $watermark_padding;
+        	 
+        	imagecopy($image, $watermark, $watermark_left, $watermark_top, 0, 0, $watermark_width, $watermark_height);
 		}
 		
 		protected function getEmptyImage($width, $height, $fill_r=255, $fill_g=255, $fill_b=255) {
