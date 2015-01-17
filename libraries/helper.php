@@ -7,17 +7,6 @@
 			require_once Application::getSitePath() . '/packages/image/includes/field.php';
 						
 			$field = new TEntityImagesField($aName, $entity_name, $entity_id, $params);
-			$field_hash = $field->GetValue();
-			
-			$session_name = self::getSessionName();
-			if (!isset($_SESSION[$session_name])) $_SESSION[$session_name] = array();
-			
-			$_SESSION[$session_name][$field_hash] = array(
-				'field_name' => $aName,
-				'entity_name' => $entity_name,
-				'entity_id' => $entity_id,
-				'params' => $params
-			);
 
 			return $field;
 		}
