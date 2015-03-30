@@ -49,8 +49,9 @@
 			$iframe_src = $this->getIframeSrc();
 			$iframe_width = $this->width;
 			$iframe_height = $this->height;
+			$iframe_name = 'image_upload_' . md5($session_name);
 
-			$iframe_html = "<iframe src=\"$iframe_src\" width=\"$iframe_width\" height=\"$iframe_height\" border=0 style=\"border: none\"></iframe>";
+			$iframe_html = "<iframe name=\"$iframe_name\" src=\"$iframe_src\" width=\"$iframe_width\" height=\"$iframe_height\" border=0 style=\"border: none\"></iframe>";
 			return "$hidden_field_html $iframe_html";			
 		}
 		
