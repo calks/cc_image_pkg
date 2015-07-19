@@ -1,6 +1,6 @@
 <?php
 	
-	class imagePkgSettingsAddonImageParam extends coreSettingsAddonBaseParam {
+	class imagePkgImageSettingParam extends coreBaseSettingParam {
 		
 		public function renderField() {			
 			$field = coreFormElementsLibrary::get('image', $this->getFieldName());

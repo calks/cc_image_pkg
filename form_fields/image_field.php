@@ -1,6 +1,6 @@
 <?php
 	
-	class imagePkgFormElementsAddonImageField extends coreFormElementsAddonBaseField {
+	class imagePkgImageFormField extends coreBaseFormField {
 	
 		protected $entity_name; 
 		protected $entity_id;
