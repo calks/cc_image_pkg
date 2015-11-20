@@ -4,8 +4,8 @@
 	
 		protected $entity_name; 
 		protected $entity_id;
-		protected $width = 800;
-		protected $height = 300;
+		protected $width = '100%';
+		protected $height = 100;
 		protected $max_files;
 		protected $entity_existance_check = true;
 		protected $valid_extensions = array(
