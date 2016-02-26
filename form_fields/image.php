@@ -55,7 +55,7 @@
 			return "$hidden_field_html $iframe_html";			
 		}
 		
-		function getIframeSrc() {
+		protected function getIframeSrc() {
 			return Application::getSeoUrl("/image_upload/$this->value");
 		}
 		
