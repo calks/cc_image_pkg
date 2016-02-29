@@ -63,6 +63,10 @@
 			return md5('file_uploader_fields');			
 		}
 		
+		public function isEmpty() {
+			return imagePkgHelperLibrary::getFilesCount($this->value) == 0;
+		}
+		
 		
 		
 	}
