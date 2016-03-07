@@ -27,12 +27,9 @@
 			//echo('setValue(' . $value . ')');
 		}
 		
-		public function GetAsHTML() {
-			//echo '*' . $this->value . '*';
-			$session_name = $this->getSessionName();
-			if (!isset($_SESSION[$session_name])) $_SESSION[$session_name] = array();
-			
-			$_SESSION[$session_name][$this->value] = array(
+		
+		protected function getParamBlock() {
+			return array(
 				'field_name' => $this->field_name,
 				'entity_name' => $this->entity_name,
 				'entity_id' => $this->entity_id,
@@ -42,6 +39,14 @@
 					'entity_existance_check' => $this->entity_existance_check
 				)
 			);
+		}
+		
+		public function GetAsHTML() {
+			//echo '*' . $this->value . '*';
+			$session_name = $this->getSessionName();
+			if (!isset($_SESSION[$session_name])) $_SESSION[$session_name] = array();
+			
+			$_SESSION[$session_name][$this->value] = $this->getParamBlock();
 			
 			
 			$hidden_field_html = "<input type=\"hidden\" name=\"$this->field_name\" value=\"$this->value\" />";
