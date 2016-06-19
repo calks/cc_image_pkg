@@ -1,17 +1,7 @@
 <?php
 
 	class imagePkgHelperLibrary extends filePkgHelperLibrary {
-		
-		
-		public static function getField($aName, $entity_name=null, $entity_id=null, $params=array()) {
-			require_once Application::getSitePath() . '/packages/image/includes/field.php';
-						
-			$field = new TEntityImagesField($aName, $entity_name, $entity_id, $params);
-
-			return $field;
-		}
-				
-		
+	
 		public static function getFilesCount($field_hash) {			
 			return Application::runModule('image_upload', array($field_hash, 'count'));
 		}
