@@ -3,9 +3,9 @@
 		<form action="{$form_action}" method="post" enctype="multipart/form-data">
 		
 			<input class="upload" type="file" name="file">
-			<input class="button" type="submit" name="submit" value="Загрузить">
+			<input class="button" type="submit" name="submit" value="{$module->gettext('Upload')}">
 			
-			<span class="size_restriction">Ограничение на размер: {$upload_max_size}</span>
+			<span class="size_restriction">{$module->gettext('Max size:')} {$upload_max_size}</span>
 		</form>
 	{/if}
 
@@ -21,7 +21,7 @@
 	<ul class="file_list">
 		{foreach item=file from=$files}
 			<li>
-				<a class="delete" href="{$file->delete_link}">удалить</a>
+				<a class="delete" href="{$file->delete_link}">{$module->gettext('delete')}</a>
 				<span class="size">{$file->size_str}, {$file->width}x{$file->height}</span>
 				<a class="thumb" href="{$file->url}" target="_blank">
 					<img alt="" src="{$file->thumbnail_url}">
