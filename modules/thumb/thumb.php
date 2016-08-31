@@ -70,9 +70,10 @@
 				
 				$this->source_path = Application::getSitePath() . imagePkgHelperLibrary::getStorageDirectory($this->image->stored_filename) . '/' . $this->image->stored_filename;
 			}
-			//echo $this->source_path;
+			//echo $this->source_path;die();
 
 			if (!is_file($this->source_path)) return $this->terminate();
+			
 			
 			$thumb_filename = @array_shift($params);
 			
@@ -94,9 +95,23 @@
         	}
         	else return $this->terminate();
         	
-        	$src_width = $info[0];
-        	$src_height = $info[1];
-
+        	
+        	
+			$autorotate_angle = $this->getAngleForAutorotate();
+			if (abs($autorotate_angle) == 90) {
+        		$src_width = $info[1];
+        		$src_height = $info[0];				
+			}
+			else {
+        		$src_width = $info[0];
+        		$src_height = $info[1];
+			}
+			
+			
+			if ($autorotate_angle) {
+				$img = imagerotate($img, $autorotate_angle, 0);
+			}
+			
                 
 			if ($this->mode == 'crop') { 
 		        $dims = $this->retainAspectRationCrop($src_width, $src_height, $this->width, $this->height);
@@ -143,7 +158,8 @@
 
 	        $ne = $this->getEmptyImage($out_width, $out_height);
 
-        	imagecopyresampled($ne, $img, $destLeft, $destTop, $srcLeft, $srcTop, $dest_width, $dest_height, $info[0], $info[1]);
+        	imagecopyresampled($ne, $img, $destLeft, $destTop, $srcLeft, $srcTop, $dest_width, $dest_height, $src_width, $src_height);
+        	
 
 //        if ($watermark) $ne = createWatermark($ne);
 
@@ -174,6 +190,36 @@
         	else return $this->terminate();        	
 		}
 		
+		
+		protected function getAngleForAutorotate() {
+			
+			$autorotation_enabled = coreSettingsLibrary::get('image/autorotate');
+			if (!$autorotation_enabled) return 0;
+						
+			/*
+			 * Orientation values:
+			 * 6 - rotated 90 degrees CCW 
+			 * 8 - rotated 90 degrees CW
+			 * 3 - up side down
+			 * 1 - normal
+			 *  
+			 */
+			
+			$exif = @exif_read_data($this->source_path);
+			if (!$exif) return 0;
+			$orientation = isset($exif['Orientation']) ? $exif['Orientation'] : null; 
+			
+			switch ($orientation) {
+				case 6:
+					return -90;
+				case 8:
+					return 90;
+				case 3:
+					return 180;
+				default:
+					return 0;
+			}
+		}
 		
 		protected function addWatermark($image) {
 			$watermark_file = coreResourceLibrary::getFirstFilePath(APP_RESOURCE_TYPE_MODULE, $this->getName(), "/static/watermark");
