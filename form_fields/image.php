@@ -42,27 +42,44 @@
 		}
 		
 		public function GetAsHTML() {
-			//echo '*' . $this->value . '*';
+
 			$session_name = $this->getSessionName();
 			if (!isset($_SESSION[$session_name])) $_SESSION[$session_name] = array();
-			
-			$_SESSION[$session_name][$this->value] = $this->getParamBlock();
-			
+
+			$_SESSION[$session_name][$this->value] = $this->getParamBlock();			
 			
 			$hidden_field_html = "<input type=\"hidden\" name=\"$this->field_name\" value=\"$this->value\" />";
 			
-			$iframe_src = $this->getIframeSrc();
+			$iframe_src = Application::getSiteUrl() . $this->getIframeSrc();
+			
 			$iframe_width = $this->width;
-			$iframe_height = $this->height;
-			$iframe_name = 'image_upload_' . md5($session_name);
-
-			$iframe_html = "<iframe name=\"$iframe_name\" src=\"$iframe_src\" width=\"$iframe_width\" height=\"$iframe_height\" border=0 style=\"border: none\"></iframe>";
-			return "$hidden_field_html $iframe_html";			
+			$iframe_height = $this->height;			
+			$field_id = $this->value;
+			
+			$page = Application::getPage();
+			$page->addScript(coreResourceLibrary::getStaticPath('/js/image-field.js'));
+			
+			$iframe_html = "<iframe name=\"i$field_id\" src=\"$iframe_src\" width=\"$iframe_width\" height=\"$iframe_height\" border=0 style=\"border: none\"></iframe>";
+			return "				
+					<div class=\"file-form-field image-form-field\" id=\"$field_id\"></div>
+					
+					<noscript>
+						$hidden_field_html
+						$iframe_html
+					</noscript>
+				
+					<script type=\"text/javascript\">
+						jQuery(document).ready(function(){
+							var im = new imageField('$this->field_name', '$field_id', '$iframe_src', '$iframe_width', '$iframe_height');
+						});
+					</script>				
+			";			
 		}
 		
 		protected function getIframeSrc() {
 			return Application::getSeoUrl("/image_upload/$this->value");
 		}
+		
 		
 		protected function getSessionName() {
 			return md5('file_uploader_fields');			

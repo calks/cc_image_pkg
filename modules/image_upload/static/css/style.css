@@ -1,10 +1,10 @@
 @CHARSET "UTF-8";
 
-.file_list .size {
+.file-form-field .file_list .size {
 	width: 150px;
 }
 
-.file_list .thumb {
+.file-form-field .file_list .thumb {
 	float: left;
 	margin-right: 10px;
 	padding: 2px;
@@ -12,9 +12,9 @@
 	border: 1px solid silver;
 }
 
-.file_list .name,
-.file_list .delete,
-.file_list .size {
+.file-form-field .file_list .name,
+.file-form-field .file_list .delete,
+.file-form-field .file_list .size {
 	position: relative;
 	top: 32px;
 }

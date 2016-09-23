@@ -11,6 +11,7 @@
 			$smarty = Application::getSmarty();
 			
 			$file_upload_css = coreResourceLibrary::getFirstFilePath(APP_RESOURCE_TYPE_MODULE, 'file_upload', '/static/css/style.css');
+			$this->response_data['css'][] = $file_upload_css; 
 			$smarty->assign('file_upload_css', $file_upload_css);
 			
 			return parent::run($params);

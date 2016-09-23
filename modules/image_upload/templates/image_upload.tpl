@@ -3,10 +3,8 @@
 <head>
 	<link rel="stylesheet" type="text/css" href="{$file_upload_css}">
 	<link rel="stylesheet" type="text/css" href="{$css_url}">
-
 </head>
-<body>
-	
-	{$content}
 
+<body class="file-form-field">
+	{$content}
 </body></html>
