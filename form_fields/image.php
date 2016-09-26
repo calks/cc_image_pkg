@@ -63,8 +63,9 @@
 			return "				
 					<div class=\"file-form-field image-form-field\" id=\"$field_id\"></div>
 					
-					<noscript>
-						$hidden_field_html
+					$hidden_field_html
+					
+					<noscript>						
 						$iframe_html
 					</noscript>
 				
