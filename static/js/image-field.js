@@ -93,7 +93,7 @@
 				});
 			});
 			
-			content.find('input[type=submit]').on('click', function(event){
+			content.find('input[type=submit], input[type=image]').on('click', function(event){
 				event.preventDefault();				
 				
 				var input_clicked = jQuery(this); 
@@ -104,8 +104,8 @@
 	            var formData = new FormData(form[0]);
 	            formData.append('ajax', 1);
 	            formData.append(input_clicked.attr('name'), input_clicked.val());
-	            
-	            console.log(formData);
+	            App.blockUI();
+	            	            
 	            jQuery.ajax({
 	                url: form_action,
 	                type: 'post',
@@ -118,9 +118,11 @@
 	                    return myXhr;
 	                },
 	                success: function(response) {
+	                	App.unblockUI();
 	                	me.ajaxSuccessCallback(response);
 	                },
 	                error: function() {
+	                	App.unblockUI();
 	                	me.ajaxErrorCallback(response);
 	                },
 	                data: formData,
