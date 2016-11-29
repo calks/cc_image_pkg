@@ -113,8 +113,8 @@
 			}
 			
                 
-			if ($this->mode == 'crop') { 
-		        $dims = $this->retainAspectRationCrop($src_width, $src_height, $this->width, $this->height);
+			if (in_array($this->mode, array('crop', 'fit-crop'))) { 
+		        $dims = $this->retainAspectRatio($this->mode, $src_width, $src_height, $this->width, $this->height);
 
 		        $out_width = $this->width;
 		        $out_height = $this->height;
@@ -143,8 +143,12 @@
 		        }	        
 	        }
     	    else {
-		        if ($info[0] > $this->width || $info[1] > $this->height) $dims = $this->retainAspectRation($src_width, $src_height, $this->width, $this->height);
-		        else $dims = array($info[0], $info[1]);
+		        if ($info[0] > $this->width || $info[1] > $this->height) {
+		        	$dims = $this->retainAspectRatio($this->mode, $src_width, $src_height, $this->width, $this->height);
+		        }
+		        else {
+		        	$dims = array($info[0], $info[1]);
+		        }
 		        $srcLeft = 0;
 		        $srcTop = 0;
 		        $destLeft = 0;
@@ -267,27 +271,30 @@
 		}
 		
 		
-		protected function retainAspectRation($w, $h, $neww, $newh) {
-
-			if ($w > $neww) $aspect = $w / $neww;
-			else $aspect = $h / $newh;
-
-			if ($h / $aspect > $newh) $aspect = $h / $newh;
-
-			return array(round($w / $aspect), round($h / $aspect));
-		}
-    
-    
-		protected function retainAspectRationCrop($w, $h, $neww, $newh) {
-
-			$aspect_h = $h / $newh;
-			$aspect_w = $w / $neww;
-    	   	
-			$aspect = ($aspect_h<$aspect_w) ? $aspect_h : $aspect_w;
-    	
-			if ($aspect < 1) return array($w, $h);
-
-			return array(round($w / $aspect), round($h / $aspect));
+		protected function retainAspectRatio($mode, $w, $h, $neww, $newh) {
+			switch ($mode) {
+				case 'inscribe':
+					if ($w > $neww) $aspect = $w / $neww;
+					else $aspect = $h / $newh;
+		
+					if ($h / $aspect > $newh) $aspect = $h / $newh;
+		
+					return array(round($w / $aspect), round($h / $aspect));
+							
+					break;
+				case 'crop':
+				case 'fit-crop':
+					$aspect_h = $h / $newh;
+					$aspect_w = $w / $neww;
+		    	   	
+					$aspect = min($aspect_h, $aspect_w);
+		    	
+					if ($mode == 'crop' && $aspect < 1) return array($w, $h);
+		
+					return array(round($w / $aspect), round($h / $aspect));
+							
+					break;			
+			}
 		}
 		
 		
