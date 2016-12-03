@@ -41,7 +41,7 @@
 			);
 		}
 		
-		public function GetAsHTML() {
+		public function render() {
 
 			$session_name = $this->getSessionName();
 			if (!isset($_SESSION[$session_name])) $_SESSION[$session_name] = array();
