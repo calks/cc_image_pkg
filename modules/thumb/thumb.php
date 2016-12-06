@@ -53,9 +53,6 @@
 			if ((int)$this->image_id == 0) {
 				$this->image_id = str_replace(array('/', '\\'), '', $this->image_id);
 				
-				/*$t = coreResourceLibrary::getFirstFilePath(APP_RESOURCE_TYPE_MODULE, $this->getName(), '/static/no_image');
-				print_r($t);*/
-				
 				$this->source_path = Application::getSitePath() . coreResourceLibrary::getFirstFilePath(APP_RESOURCE_TYPE_MODULE, $this->getName(), "/static/no_image/{$this->image_id}.png");
 				if (!is_file($this->source_path)) {
 					$this->source_path = Application::getSitePath() . coreResourceLibrary::getFirstFilePath(APP_RESOURCE_TYPE_MODULE, $this->getName(), "/static/no_image/default.png");
@@ -70,7 +67,6 @@
 				
 				$this->source_path = Application::getSitePath() . imagePkgHelperLibrary::getStorageDirectory($this->image->stored_filename) . '/' . $this->image->stored_filename;
 			}
-			//echo $this->source_path;die();
 
 			if (!is_file($this->source_path)) return $this->terminate();
 			
@@ -115,17 +111,17 @@
                 
 			if (in_array($this->mode, array('crop', 'fit-crop'))) { 
 		        $dims = $this->retainAspectRatio($this->mode, $src_width, $src_height, $this->width, $this->height);
-
+		        
 		        $out_width = $this->width;
 		        $out_height = $this->height;
 		        $dest_width = $dims[0];
 		        $dest_height = $dims[1];
-	        
-				$srcLeft = ceil(($dest_width-$this->width)/80);
+		        	        
+				$srcLeft = ceil(($dest_width-$this->width)/2);
 	        
 	        
 		        if ($dest_height>$this->height) {
-		        	$srcTop = ceil(($dest_height-$this->height));
+		        	$srcTop = ceil(($dest_height-$this->height)/2);		        	
 		        	$destTop = 0;	
 		        }
 		        else {
@@ -140,14 +136,15 @@
 		        else {
 		        	$srcLeft = 0;
 		        	$destLeft = ceil(($this->width-$dest_width)/2);	        	
-		        }	        
+		        }		        
+		        
 	        }
     	    else {
 		        if ($info[0] > $this->width || $info[1] > $this->height) {
 		        	$dims = $this->retainAspectRatio($this->mode, $src_width, $src_height, $this->width, $this->height);
 		        }
 		        else {
-		        	$dims = array($info[0], $info[1]);
+		        	$dims = array($info[0], $info[1], 1);
 		        }
 		        $srcLeft = 0;
 		        $srcTop = 0;
@@ -161,9 +158,13 @@
 	        }
 
 	        $ne = $this->getEmptyImage($out_width, $out_height);
+	        	        
+	        
+			
+	        $srcLeft = ceil($srcLeft * $dims[2]);
+	        $srcTop = ceil($srcTop * $dims[2]);
 
         	imagecopyresampled($ne, $img, $destLeft, $destTop, $srcLeft, $srcTop, $dest_width, $dest_height, $src_width, $src_height);
-        	
 
 //        if ($watermark) $ne = createWatermark($ne);
 
@@ -186,9 +187,9 @@
         	
         	call_user_func($func, $ne, $destination_path);
         	
-        	/*header("Content-type: $type\n");
+        	header("Content-type: $type\n");
         	imagejpeg($ne);
-        	die();*/
+        	die();
 
         	if (is_file($destination_path)) $this->redirectToImage();
         	else return $this->terminate();        	
@@ -279,7 +280,7 @@
 		
 					if ($h / $aspect > $newh) $aspect = $h / $newh;
 		
-					return array(round($w / $aspect), round($h / $aspect));
+					return array(round($w / $aspect), round($h / $aspect), $aspect);
 							
 					break;
 				case 'crop':
@@ -289,9 +290,9 @@
 		    	   	
 					$aspect = min($aspect_h, $aspect_w);
 		    	
-					if ($mode == 'crop' && $aspect < 1) return array($w, $h);
+					if ($mode == 'crop' && $aspect < 1) return array($w, $h, $aspect);
 		
-					return array(round($w / $aspect), round($h / $aspect));
+					return array(round($w / $aspect), round($h / $aspect), $aspect);
 							
 					break;			
 			}
