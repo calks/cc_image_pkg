@@ -14,16 +14,12 @@
 			}
 			
 			$field->setValue($this->param_value);
-			$out = $field->getAsHtml();
+			$out = $field->render();
 			if ($this->param_displayed_unit) $out .= " $this->param_displayed_unit"; 
 
 			return $out;
 		}
 		
 		
-		/*public function setValueFromPost() {
-			parent::setValueFromPost();
-			$this->param_value = $this->param_value=='' ? null : (int)$this->param_value;
-		}*/
 		
 	}

@@ -41,7 +41,7 @@
 			);
 		}
 		
-		public function GetAsHTML() {
+		public function render() {
 			
 			$this->setSessionParams();
 			
