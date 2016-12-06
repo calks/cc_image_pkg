@@ -42,11 +42,8 @@
 		}
 		
 		public function GetAsHTML() {
-
-			$session_name = $this->getSessionName();
-			if (!isset($_SESSION[$session_name])) $_SESSION[$session_name] = array();
-
-			$_SESSION[$session_name][$this->value] = $this->getParamBlock();			
+			
+			$this->setSessionParams();
 			
 			$hidden_field_html = "<input type=\"hidden\" name=\"$this->field_name\" value=\"$this->value\" />";
 			
@@ -82,11 +79,14 @@
 		}
 		
 		
-		protected function getSessionName() {
-			return md5('file_uploader_fields');			
+		protected function setSessionParams() {
+			$session_name = filePkgHelperLibrary::getSessionName();
+			if (!isset($_SESSION[$session_name])) $_SESSION[$session_name] = array();			
+			$_SESSION[$session_name][$this->value] = $this->getParamBlock();
 		}
 		
 		public function isEmpty() {
+			$this->setSessionParams();
 			return imagePkgHelperLibrary::getFilesCount($this->value) == 0;
 		}
 		
