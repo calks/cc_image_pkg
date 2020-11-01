@@ -196,9 +196,14 @@
 		}
 		
 		
+		protected function isAutorotateEnabled() {
+			return coreSettingsLibrary::get('image/autorotate');
+		}
+		
+		
 		protected function getAngleForAutorotate() {
 			
-			$autorotation_enabled = coreSettingsLibrary::get('image/autorotate');
+			$autorotation_enabled = $this->isAutorotateEnabled();
 			if (!$autorotation_enabled) return 0;
 						
 			/*
